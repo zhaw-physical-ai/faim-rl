@@ -25,8 +25,11 @@ Interactive notebook used during lecture to demonstrate RL concepts.
 Your hands-on exercise: implement bandit algorithms from scratch and analyze their performance.
 
 ### Lab Solutions
+<a href="https://colab.research.google.com/github/zhaw-physical-ai/faim-rl/blob/main/week1/lab_solutions.ipynb" target="_blank">
+  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open Lab Solutions In Colab" width="200"/>
+</a><br></br>
 
-Complete implementations with detailed explanations. **Available after the submission deadline.**
+Complete implementations with detailed explanations.
 
 ## Getting Started
 
