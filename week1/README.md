@@ -12,17 +12,19 @@ By the end of this practical lab exercise, you will be able to:
 ## 📁 Materials
 
 ### Lecture Examples
-[![Lecture examples notebook](https://img.shields.io/badge/Colab-Run%20additional%20(voluntary)%20lecture%20examples%20notebook-orange?logo=googlecolab)](https://colab.research.google.com/github/zhaw-physical-ai/adml-rl/blob/main/week1/lecture_examples.ipynb)
+[![Lecture examples notebook](https://img.shields.io/badge/Colab-Run%20additional%20(voluntary)%20lecture%20examples%20notebook-orange?logo=googlecolab)](https://colab.research.google.com/github/zhaw-physical-ai/faim-rl/blob/main/week1/lecture_examples.ipynb)
 
 
 Interactive notebook used during lecture to demonstrate RL concepts.
 
 ### Lab Assignment
-<a href="https://colab.research.google.com/github/zhaw-physical-ai/adml-rl/blob/main/week1/lab_assignment.ipynb" target="_blank">
+<a href="https://colab.research.google.com/github/zhaw-physical-ai/faim-rl/blob/main/week1/lab_assignment.ipynb" target="_blank">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open Main Lab File In Colab" width="200"/>
 </a><br></br>
 
 Your hands-on exercise: implement bandit algorithms from scratch and analyze their performance.
+
+### Lab Solutions
 
 Complete implementations with detailed explanations. **Available after the submission deadline.**
 
@@ -38,7 +40,7 @@ Complete implementations with detailed explanations. **Available after the submi
 If you prefer to run locally:
 ```bash
 pip install numpy matplotlib jupyter
-jupyter notebook week1_lab_assignment.ipynb
+jupyter notebook lab_assignment.ipynb
 ```
 
 ## Lab Structure
@@ -88,7 +90,7 @@ A smarter strategy that automatically balances exploration and exploitation. It 
 ## Tips for Success
 
 **Common Pitfalls:**
-- **Incremental updates:** Use the formula: `Q[a] += (reward - Q[a]) / N[a]`
+- **Incremental updates:** Increment `N[a]` first, then use the formula: `Q[a] += (reward - Q[a]) / N[a]`
 - **UCB division by zero:** Handle the case when `N[a] = 0`
 - **Random vs randn:** Use `np.random.randn()` for Gaussian, not `np.random.rand()`
 
@@ -96,14 +98,16 @@ A smarter strategy that automatically balances exploration and exploitation. It 
 
 **What Good Results Look Like:**
 
+The numbers below are for the 10-armed testbed of the lab (1000 steps, averaged over 100+ experiments, measured over the last 100 steps). Individual runs are noisy, so expect a few percentage points of variation.
+
 *Epsilon-Greedy (ε=0.1):*
 - Should reach 70-85% optimal action rate
 - Average reward converges close to optimal arm's mean
 - Better than greedy but not perfect
 
 *UCB (c=2.0):*
-- Should reach 90-95% optimal action rate
-- Faster initial learning than epsilon-greedy
+- Should reach 80-90% optimal action rate (a bit above epsilon-greedy after 1000 steps, and still improving)
+- Reaches a 50% optimal action rate sooner than epsilon-greedy
 - Lower cumulative regret over time
 
 *Greedy (ε=0):*
