@@ -17,6 +17,10 @@ By the end of this practical lab exercise, you will be able to:
 
 Interactive notebook used during lecture to demonstrate RL concepts.
 
+[![Paradigms notebook](https://img.shields.io/badge/Colab-Run%20additional%20(voluntary)%20notebook%3A%20supervised%2C%20unsupervised%20and%20reinforcement%20learning-orange?logo=googlecolab)](https://colab.research.google.com/github/zhaw-physical-ai/faim-rl/blob/main/week1/lecture_ml_paradigms.ipynb)
+
+Short notebook connecting RL to what you know from supervised learning: the same models (linear regression, neural networks) are used in supervised, unsupervised and reinforcement learning, and only the framing of the problem differs.
+
 ### Lab Assignment
 <a href="https://colab.research.google.com/github/zhaw-physical-ai/faim-rl/blob/main/week1/lab_assignment.ipynb" target="_blank">
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open Main Lab File In Colab" width="200"/>
