@@ -12,20 +12,20 @@ By the end of this session, you will be able to:
 
 ## Materials
 
-### Lecture: Q-Learning with Tic-Tac-Toe
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/zhaw-physical-ai/faim-rl/blob/main/week2/lecture_tictactoe.ipynb)
+### Worked Example: Q-Learning with Tic-Tac-Toe
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/zhaw-physical-ai/faim-rl/blob/main/week2/example_tictactoe.ipynb)
 
-Follow-along notebook demonstrating Q-learning concepts step by step:
+Worked example you can run and modify, building up Q-learning step by step:
 - From bandits to MDPs
 - Value functions and the Bellman equation
 - Building a Tic-Tac-Toe agent from scratch
 - Watching the agent improve over time
 - Visualizing learned Q-values
 
-### Lab Assignment: Q-Learning for Nim
+### Exercise: Q-Learning for Nim
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/zhaw-physical-ai/faim-rl/blob/main/week2/lab_assignment.ipynb)
 
-Hands-on exercise where you:
+The hands-on part of this week. You will:
 - Implement the Q-learning update rule
 - Train agents on progressively harder Nim configurations
 - Play interactively against your trained agents
@@ -63,15 +63,21 @@ pip install numpy matplotlib jupyter
 jupyter notebook lab_assignment.ipynb
 ```
 
-## Lab Structure
+## Exercise Structure
 
 ### Part 1-2: Understand the Environment
 Run cells to see how Nim works. Simple variable changes only.
 
-### Part 3: Implement Q-Learning Update ⭐
-**The key task:** Complete one line of code
+### Part 3: Implement the Q-Learning Update ⭐
+**The key task.** Build the target, then nudge `Q(s,a)` toward it:
 ```python
-self.Q[(state, action)] = current_q + self.alpha * (reward - current_q)
+if next_state is None:
+    target = final_reward                 # terminal move: the verdict is the target
+else:
+    next_q_values = [self.Q[(next_state, a)] for a in valid_actions_for(next_state)]
+    target = self.gamma * max(next_q_values)   # reward is 0 here, so only the future counts
+
+self.Q[(state, action)] = current_q + self.alpha * (target - current_q)
 ```
 
 ### Part 4-6: Train and Play
@@ -117,13 +123,32 @@ Q(s,a) ← Q(s,a) + α[r + γ·max Q(s',a') - Q(s,a)]
 
 ## Tips for Success
 
-### The One Line You Need to Implement
+### The Update You Need to Implement
+Week 1's bandit update aimed straight at the reward:
+```python
+Q[a] = Q[a] + alpha * (reward - Q[a])
+```
+Nim only pays out on the final move, so that target would be 0 everywhere else and
+the opening would never be learned. Q-learning aims at the reward **plus the value of
+where you land**:
+```
+Q(s,a) <- Q(s,a) + alpha * ( r + gamma * max_a' Q(s',a') - Q(s,a) )
+```
+In the `learn()` method you walk backwards through the game, so `s'` is simply the
+position you faced on your *next* turn, and `r` is 0 for every move but the last:
 ```python
 # In the learn() method:
-self.Q[(state, action)] = current_q + self.alpha * (reward - current_q)
-```
+if next_state is None:
+    target = final_reward
+else:
+    next_q_values = [self.Q[(next_state, a)] for a in valid_actions_for(next_state)]
+    target = self.gamma * max(next_q_values)
 
-This moves the Q-value toward the observed reward. That's it!
+self.Q[(state, action)] = current_q + self.alpha * (target - current_q)
+```
+The *shape* is identical to the bandit update - nudge the old estimate a fraction
+`alpha` toward a target. Only the target changed. That `max_a' Q(s',a')` term is what
+carries the win or loss back from the last move to the first.
 
 ### Playing Against the Agent
 1. Uncomment the `play_against_agent(...)` line
@@ -136,7 +161,10 @@ This moves the Q-value toward the observed reward. That's it!
 - **3+ piles:** The XOR strategy (ask about this in class!)
 
 ### Common Issues
-- If Q-values all stay 0: Check your update formula
+- If Q-values all stay 0: check your update formula - the `self.Q[(state, action)] = ...`
+  line is still the untouched `current_q` placeholder
+- If only the final moves ever get non-zero values: your target is missing the
+  `gamma * max_a' Q(s',a')` term, so nothing propagates backwards
 - If agent plays randomly: Make sure epsilon=0 during evaluation
 - If training is slow: You may need more games for complex configurations
 
