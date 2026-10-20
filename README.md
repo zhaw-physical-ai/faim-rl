@@ -19,6 +19,11 @@ Each session combines theory with hands-on practice, so the folders below contai
 - Explore the exploration vs exploitation tradeoff
 - Implement epsilon-greedy and UCB algorithms from scratch
 
+### [Week 2: Q-Learning](week2/)
+- Move from bandits to Markov decision processes: states, transitions and delayed rewards
+- Understand the Q-learning update rule and why it works
+- Implement tabular Q-learning for turn-based games (Tic-Tac-Toe, Nim) and play against your agent
+
 More weeks will be added as the module progresses.
 
 ## Getting Started
