@@ -34,7 +34,16 @@ The hands-on part of this week. You will:
 ### Solutions
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/zhaw-physical-ai/faim-rl/blob/main/week2/lab_solutions.ipynb)
 
-Complete solutions with detailed explanations.
+Complete solutions to the exercise, cell by cell in the same order, including worked
+answers to the analysis questions and all three bonus challenges.
+
+### Reference Implementations (optional)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/zhaw-physical-ai/faim-rl/blob/main/week2/reference_implementation.ipynb)
+
+The same ideas packaged in a more conventional `gym`-style API - one `update()` call
+per transition rather than learning at the end of the game - plus SARSA and a
+decaying-epsilon variant. Worth a look *after* the exercise. Note this notebook uses a
+different agent interface, so its code does not drop into the exercise notebook.
 
 ## The Game of Nim
 
