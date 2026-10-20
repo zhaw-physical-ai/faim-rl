@@ -24,7 +24,35 @@ Each session combines theory with hands-on practice, so the folders below contai
 - Understand the Q-learning update rule and why it works
 - Implement tabular Q-learning for turn-based games (Tic-Tac-Toe, Nim) and play against your agent
 
-More weeks will be added as the module progresses.
+### [Week 3: Policy Gradient Methods](week3/)
+- Move from learning values to learning the policy directly
+- Implement REINFORCE from scratch and solve CartPole
+- Understand why policy gradients are high-variance, and what a baseline does
+- *Projects are introduced at the end of this session*
+
+### [Week 4: Deep RL with Stable-Baselines3](week4/)
+- Your 200 lines of REINFORCE vs three lines of PPO
+- Compare PPO, A2C and DQN on LunarLander
+- Hyperparameters, training length, and reading results honestly
+- *Project work starts in the second half of this session*
+
+### [Weeks 5-6: Project Work](projects/)
+- Four projects with working baselines: Pong, highway driving, stock trading, multi-agent
+- Build on a baseline, improve it, present what you found
+
+## Module Schedule
+
+| Week | Topic | Built by hand? |
+|---|---|---|
+| 1 | Bandits and the exploration/exploitation tradeoff | yes - from scratch |
+| 2 | Q-learning on turn-based games | yes - from scratch |
+| 3 | Policy gradients (REINFORCE) | yes - from scratch |
+| 4 | Deep RL with stable-baselines3 | no - library |
+| 5-6 | Project work | library, your own extensions |
+
+The order is deliberate. Weeks 1-3 build each algorithm by hand so you know what is
+inside the library calls you make from Week 4 onwards. By the time you write
+`PPO('MlpPolicy', env)`, you will have written every part of it.
 
 ## Getting Started
 

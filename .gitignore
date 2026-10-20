@@ -1,1 +1,11 @@
 .DS_Store
+
+# notebook / training run artefacts
+.ipynb_checkpoints/
+__pycache__/
+*.pyc
+*.pth
+*.mp4
+training_curve.png
+logs/
+videos/
