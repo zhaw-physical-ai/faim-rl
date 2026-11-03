@@ -8,8 +8,9 @@ Train an agent to play Atari Pong using deep reinforcement learning.
 
 **Pong** is a classic Atari game where you control a paddle to bounce a ball past your opponent. It's a great testbed for visual RL because:
 - State is raw pixels (84x84 grayscale images)
-- Actions are simple (up, down, stay)
-- Fast training (~30 min for decent performance)
+- Actions are simple (6 in the ALE action set, effectively up, down and stay)
+- It is one of the easier Atari games - but "easy" for Atari still means a long
+  training run (see below)
 - Clear progress visualization
 
 **Goal:** Beat the built-in AI opponent consistently
@@ -26,24 +27,32 @@ pip install "stable-baselines3[extra]" "gymnasium[atari]"
 # ale-py ships the ROMs now; the old accept-rom-license extra no longer exists
 ```
 
-### Run Baseline (5 minutes)
+### Run Baseline (about 10 minutes)
 Open `project1_atari_pong.ipynb` and run all cells. This will:
 1. Load Pong environment with frame preprocessing
-2. Train a PPO agent for 100k steps (~5 min)
+2. Train a PPO agent for 100k steps
 3. Evaluate and visualize the trained agent
 
-**Expected result:** Agent wins ~50-70% of games after 100k steps.
+**Expected result:** after 100k steps the agent still loses almost every point (a
+score close to -21). That is normal: the baseline is a **pipeline check** - it shows
+that preprocessing, training and evaluation all work - not a trained player.
 
 ---
 
-## 📊 Baseline Performance
+## 📊 What Training Pong Takes
 
-| Timesteps | Win Rate | Training Time |
-|-----------|----------|---------------|
-| 50k | 20-40% | ~2 min |
-| 100k | 50-70% | ~5 min |
-| 500k | 80-95% | ~25 min |
-| 1M | 95-100% | ~50 min |
+Pong typically needs somewhere between several hundred thousand and a few million
+steps before the agent wins points regularly, and longer still to beat the built-in
+opponent consistently. On a CPU that is hours, so:
+
+- **Switch Colab to a GPU runtime** (*Runtime -> Change runtime type*). The CNN is
+  the bottleneck here, unlike in the earlier labs.
+- **Save checkpoints** (`model.save(...)`) and continue with `model.learn(...)`
+  across sessions - Colab runtimes do disconnect.
+- **Track progress by the score, not wins:** going from -21 to -15 is real progress
+  long before the agent wins a game.
+
+Part of your project is finding out how far you can get within your compute budget.
 
 ---
 
@@ -51,8 +60,8 @@ Open `project1_atari_pong.ipynb` and run all cells. This will:
 
 ### 1. **Train Longer**
 - Baseline: 100k steps
-- Try: 500k or 1M steps
-- Impact: Significantly better performance
+- Try: 1M steps or more (GPU runtime)
+- Impact: the single biggest lever for this project
 
 ### 2. **Hyperparameter Tuning**
 ```python
@@ -64,7 +73,7 @@ n_stack = [2, 4, 8]  # How many frames to stack
 
 # Modify network architecture
 policy_kwargs = dict(
-    net_arch=[dict(pi=[128, 128], vf=[128, 128])]  # Bigger network
+    net_arch=dict(pi=[128, 128], vf=[128, 128])  # Bigger network
 )
 ```
 
@@ -168,7 +177,7 @@ Choose what to focus on (6 hours total):
 - [OpenAI Gym Atari](https://gymnasium.farama.org/environments/atari/)
 
 **Tips:**
-- Use GPU if available (10x faster training)
+- Use a GPU if available (much faster for the CNN)
 - Save checkpoints every 100k steps
 - Record videos to debug failures
 - Try multiple random seeds for robustness
@@ -178,7 +187,8 @@ Choose what to focus on (6 hours total):
 ## 🐛 Troubleshooting
 
 **Agent doesn't improve:**
-- Train longer (500k steps minimum)
+- Train longer - at 100k steps a score near -21 is expected
+- Look at the score trend (e.g. -21 -> -18), not just wins
 - Check frame preprocessing is working
 - Verify rewards are being received
 

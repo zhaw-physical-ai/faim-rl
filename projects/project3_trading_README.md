@@ -7,7 +7,7 @@ Apply reinforcement learning to algorithmic trading - a different domain from ga
 ## 💰 Overview
 
 **Stock trading** is a natural fit for RL because:
-- Sequential decision-making (when to buy/sell/hold)
+- Sequential decision-making (when to be in or out of the market)
 - Delayed rewards (profit realized over time)
 - Uncertain environment (market dynamics)
 - Clear success metric (profit/loss)
@@ -27,26 +27,32 @@ The baseline uses **gym-anytrading** with real historical stock data.
 pip install stable-baselines3 gym-anytrading pandas matplotlib
 ```
 
-### Run Baseline (2 minutes)
+### Run Baseline (a few minutes)
 Open `project3_stock_trading.ipynb` and run all cells. This will:
 1. Load historical AAPL stock data
-2. Train an A2C agent to trade (buy/sell/hold)
+2. Train an A2C agent to trade (buy/sell)
 3. Backtest on test data and visualize results
 
-**Expected result:** ~5-15% return on test data (varies by period)
+**Expected result:** do not expect the baseline to beat buy-and-hold. With only the
+closing price as input, the A2C baseline often settles on one action every day -
+always out of the market (0% return) or always in it (buy-and-hold minus fees). The
+notebook prints how often it chose each action so you can see which happened.
+
+That is the starting point, not a bug: getting the agent to actually trade, and to
+trade well, is the project.
 
 ---
 
 ## 📊 Baseline Performance
 
-| Algorithm | Train Period | Test Return | Sharpe Ratio |
-|-----------|--------------|-------------|--------------|
-| Random | - | -2% to +3% | ~0.1 |
-| Buy&Hold | - | Variable | Market |
-| A2C (baseline) | 1 year | 5-15% | 0.5-1.0 |
-| DQN (tuned) | 2 years | 10-20% | 0.8-1.5 |
+| Strategy | Test return |
+|----------|-------------|
+| Buy-and-hold | whatever the stock did over the test window (AAPL rose over 2023) |
+| Never invested | 0% |
+| A2C baseline | usually one of the two above, depending on which constant action it settles on |
 
-**Note:** Performance highly depends on market period!
+**Note:** performance depends heavily on the market period - a rising market makes
+buy-and-hold hard to beat.
 
 ---
 
@@ -55,7 +61,8 @@ Open `project3_stock_trading.ipynb` and run all cells. This will:
 ### 1. **Feature Engineering**
 Add technical indicators:
 ```python
-# Current: OHLC (open, high, low, close)
+# Current: closing price and its daily change only
+# (stocks-v0 ignores Open/High/Low/Volume - override _process_data to use them)
 # Add:
 - Moving averages (MA, EMA)
 - RSI (Relative Strength Index)
@@ -210,9 +217,10 @@ Compare against:
 
 ## 🐛 Troubleshooting
 
-**Agent always holds (doesn't trade):**
-- Reward signal too weak
-- Increase transaction cost penalty
+**Agent always picks the same action (doesn't trade):**
+- Reward signal too weak, or the input features carry too little information
+- Normalize the features: raw prices in the hundreds are hard for a small network
+- Check the transaction costs are not so high that trading never pays
 - Use shaped rewards (intermediate signals)
 
 **Overfitting to training data:**

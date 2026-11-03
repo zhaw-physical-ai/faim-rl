@@ -1,8 +1,10 @@
 # RL Project Ideas
 
 Choose one of these projects and build on it for the rest of the module. Each one
-comes with a **working baseline that runs in a few minutes**, plus guided ideas for
-improvement and open-ended extensions.
+comes with a **baseline that runs end to end in minutes**, plus guided ideas for
+improvement and open-ended extensions. The baselines are starting points, not
+solutions: most of them do not perform well yet in their short default budget, and
+improving that is the project.
 
 **The projects are introduced at the end of Week 3** so you have time to think before
 committing. Pick one by Week 4.
@@ -12,7 +14,7 @@ committing. Pick one by Week 4.
 ## Overview
 
 Each project provides:
-- ✅ **Working baseline** - runs in 2-5 minutes
+- ✅ **Working baseline** - runs end to end in roughly 5-15 minutes on a CPU
 - ✅ **Colab-ready** - no setup required
 - ✅ **Improvement ideas** - guided suggestions
 - ✅ **Advanced extensions** - open-ended challenges
@@ -40,7 +42,7 @@ Train an agent to play Pong using deep RL with visual inputs.
 
 **Domain:** Games, Computer Vision  
 **Difficulty:** ⭐⭐ Easy-Medium  
-**Baseline time:** ~5 minutes (100k steps)
+**Baseline time:** ~10 minutes (100k steps - a pipeline check; real training needs a GPU runtime)
 
 ### What You'll Learn
 - CNN policies for image inputs
@@ -50,8 +52,8 @@ Train an agent to play Pong using deep RL with visual inputs.
 
 ### Quick Stats
 - **State:** 84x84 grayscale images (4 frames stacked)
-- **Actions:** 2 discrete (up, down)
-- **Success:** 80%+ win rate vs built-in AI
+- **Actions:** 6 discrete (effectively up, down, stay)
+- **Goal:** beat the built-in AI - this needs a long training run
 
 [**Full README →**](project1_atari_README.md)
 
@@ -65,7 +67,7 @@ Train an agent for autonomous highway driving with traffic.
 
 **Domain:** Robotics, Autonomous Vehicles  
 **Difficulty:** ⭐⭐⭐ Medium  
-**Baseline time:** ~3 minutes (50k steps)
+**Baseline time:** ~10 minutes (50k steps)
 
 ### What You'll Learn
 - Safety-critical RL
@@ -75,8 +77,8 @@ Train an agent for autonomous highway driving with traffic.
 
 ### Quick Stats
 - **State:** Kinematic features (position, velocity of nearby cars)
-- **Actions:** 5 discrete (idle, left, right, faster, slower)
-- **Success:** 70%+ episodes without collision
+- **Actions:** 5 discrete (lane left, idle, lane right, faster, slower)
+- **Goal:** as many episodes as possible without a collision, at a good speed
 
 [**Full README →**](project2_highway_README.md)
 
@@ -90,7 +92,7 @@ Apply RL to algorithmic trading using real historical data.
 
 **Domain:** Finance, Time Series  
 **Difficulty:** ⭐⭐⭐ Medium  
-**Baseline time:** ~2 minutes (50k steps)
+**Baseline time:** a few minutes (50k steps)
 
 ### What You'll Learn
 - RL in a different domain (not games/robotics)
@@ -99,8 +101,8 @@ Apply RL to algorithmic trading using real historical data.
 - Backtesting and evaluation
 
 ### Quick Stats
-- **State:** OHLC prices + position
-- **Actions:** Buy, Sell, Hold
+- **State:** recent closing prices and daily price changes
+- **Actions:** Buy, Sell
 - **Success:** Outperform buy-and-hold strategy
 
 ⚠️ **Disclaimer:** Educational only, not financial advice!
@@ -117,7 +119,7 @@ Train multiple cooperative or competitive agents.
 
 **Domain:** Multi-Agent Systems, Coordination  
 **Difficulty:** ⭐⭐⭐⭐ Hard  
-**Baseline time:** ~5 minutes (100k steps)
+**Baseline time:** a few minutes (100k steps)
 
 ### What You'll Learn
 - Coordination and communication
@@ -128,7 +130,7 @@ Train multiple cooperative or competitive agents.
 ### Quick Stats
 - **Environment:** Simple Spread (3 agents, 3 landmarks)
 - **Goal:** Each agent covers different landmark
-- **Success:** Coordinated coverage
+- **Success:** clearly better coverage than random actions
 
 [**Full README →**](project4_multi_agent_README.md)
 
@@ -138,10 +140,10 @@ Train multiple cooperative or competitive agents.
 
 | Project | Domain | Difficulty | Special Features | Training Time |
 |---------|--------|------------|------------------|---------------|
-| 1. Pong | Games/Vision | ⭐⭐ | Visual input, classic benchmark | ~5 min |
-| 2. Highway | Robotics | ⭐⭐⭐ | Safety-critical, real-world | ~3 min |
-| 3. Trading | Finance | ⭐⭐⭐ | Different domain, real data | ~2 min |
-| 4. Multi-Agent | Coordination | ⭐⭐⭐⭐ | Multiple agents, emergence | ~5 min |
+| 1. Pong | Games/Vision | ⭐⭐ | Visual input, classic benchmark | ~10 min baseline, hours to learn |
+| 2. Highway | Robotics | ⭐⭐⭐ | Safety-critical, real-world | ~10 min |
+| 3. Trading | Finance | ⭐⭐⭐ | Different domain, real data | a few min |
+| 4. Multi-Agent | Coordination | ⭐⭐⭐⭐ | Multiple agents, emergence | a few min |
 
 ---
 
@@ -154,7 +156,7 @@ Train multiple cooperative or competitive agents.
 - **Extensions:** Which has the most interesting advanced ideas?
 
 **Can't decide?**
-- **Project 2 (Highway)** is the best all-rounder: quick to train, easy to see what
+- **Project 2 (Highway)** is the best all-rounder: its baseline visibly learns, it is easy to see what
   the agent is doing, and reward shaping gives you plenty to experiment with
 - **Project 1 (Pong)** if you want to work with visual input and CNNs
 - **Project 3 (Trading)** if you want a non-game domain
@@ -180,12 +182,16 @@ pip install stable-baselines3 gymnasium
 ### A note on the baselines
 
 All four baselines were checked against current library versions (Gymnasium 1.4,
-stable-baselines3 2.9) and train successfully. Several needed fixes to get there,
-because the RL ecosystem moves fast and breaks things:
+stable-baselines3 2.9) and run end to end. How far they get in their default budget
+varies a lot - Pong needs a much longer run before the agent wins points, the trading
+agent tends to settle on a single action, and the multi-agent baseline is not yet
+clearly better than random. Each notebook tells you where it stands. Several needed
+fixes to run at all, because the RL ecosystem moves fast and breaks things:
 
 | Project | What had to change |
 |---|---|
 | 1. Pong | `PongNoFrameskip-v4` -> `ALE/Pong-v5`; ROMs now ship with `ale-py`, so the old `accept-rom-license` extra is gone; `gym.register_envs(ale_py)` is now required |
+| 2. Highway | the config cell set the slow `highway-v0` simulation settings on `highway-fast-v0`, so 50k steps took about an hour; the action labels were also swapped |
 | 3. Trading | `yfinance` now returns MultiIndex columns, which breaks the env; the backtest also read attributes that do not exist |
 | 4. Multi-agent | MPE moved out of PettingZoo into its own `mpe2` package |
 

@@ -31,32 +31,35 @@ The baseline trains a DQN agent on the highway-fast-v0 environment.
 pip install stable-baselines3 highway-env
 ```
 
-### Run Baseline (3 minutes)
+### Run Baseline (about 10 minutes)
 Open `project2_highway_driving.ipynb` and run all cells. This will:
-1. Create highway environment with 5 lanes
-2. Train a DQN agent for 50k steps (~3 min)
+1. Create highway environment with 3 lanes
+2. Train a DQN agent for 50k steps
 3. Visualize the driving behavior
 
-**Expected result:** Agent drives safely with 70-80% success rate.
+**Expected result:** clearly better than random driving, but still far from safe. In
+our test run about a quarter of the episodes finished without a collision (random
+actions: about 1 in 20), at roughly 26 m/s. Results vary from run to run.
 
 ---
 
 ## 📊 Baseline Performance
 
-| Timesteps | Success Rate | Avg Speed | Collision Rate |
-|-----------|--------------|-----------|----------------|
-| 25k | 40-50% | ~25 km/h | 50-60% |
-| 50k | 70-80% | ~28 km/h | 20-30% |
-| 150k | 85-95% | ~30 km/h | 5-15% |
+| Policy | Episodes without collision | Notes |
+|--------|----------------------------|-------|
+| Random actions | rare (around 5%) | - |
+| DQN baseline, 50k steps | a minority (around 25% in our run) | already drives fast |
+| Longer training / your improvements | should rise noticeably | this is the project |
 
-**Success** = reach goal without collision
+**Success** = an episode that runs its full duration without a collision. Speed is in
+m/s (the env's `reward_speed_range` is [20, 30] m/s, i.e. 72-108 km/h).
 
 ---
 
 ## 💡 Ideas to Improve
 
 ### 1. **Reward Shaping**
-Current reward: +1 for high speed, -1 for collision
+Current reward: a bonus for driving fast (and a small one for the right lane), and a penalty for collisions
 
 Try different reward structures:
 ```python
@@ -127,7 +130,7 @@ Learn to focus on relevant vehicles:
 ```python
 # Use attention layers in network
 policy_kwargs = dict(
-    net_arch=[dict(vf=[256, 256], pi=[256, 256])],
+    net_arch=dict(vf=[256, 256], pi=[256, 256]),
     features_extractor_class=AttentionExtractor  # Custom
 )
 ```
@@ -222,7 +225,7 @@ Track these for comprehensive analysis:
 
 **Environment won't render:**
 - Install pygame: `pip install pygame`
-- For Colab, use: `env.render(mode='rgb_array')`
+- Create the env with `gym.make(..., render_mode='rgb_array')`, then call `env.render()`
 
 **Training is unstable:**
 - Lower learning rate (1e-4)

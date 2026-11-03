@@ -32,23 +32,29 @@ pip install stable-baselines3 mpe2 supersuit
 # MPE moved out of PettingZoo into its own package (mpe2)
 ```
 
-### Run Baseline (5 minutes)
+### Run Baseline (a few minutes)
 Open `project4_multi_agent.ipynb` and run all cells. This will:
 1. Create Simple Spread environment (3 agents, 3 landmarks)
-2. Train agents using independent PPO
-3. Visualize cooperative behavior
+2. Train the agents with PPO and one shared policy (parameter sharing)
+3. Compare against random actions, and visualize the behaviour
 
-**Expected result:** Agents learn to spread out to cover all landmarks
+**Expected result:** after 100k steps the agents are usually **not yet clearly better
+than random** - learning to coordinate takes longer. The notebook compares the trained
+policy with random actions, both on reward and on how well the landmarks are covered,
+so you can see where you stand. Getting a clear improvement is the first project goal.
 
 ---
 
 ## 📊 Baseline Performance
 
-| Environment | Agents | Task | Success Rate |
-|-------------|--------|------|--------------|
-| Simple Spread | 3 | Cover landmarks | 70-85% |
-| Simple Tag | 3 + 1 | Catch adversary | 50-70% |
-| Waterworld | 5 | Eat food, avoid poison | 60-80% |
+| Environment | Agents | Task | Baseline |
+|-------------|--------|------|----------|
+| Simple Spread | 3 | Cover landmarks | provided; compare with random actions |
+| Simple Tag | 3 + 1 | Catch adversary | extension |
+| Waterworld | 5 | Eat food, avoid poison | extension |
+
+There is no fixed "solved" score for these tasks. Measure against random behaviour,
+and against your own earlier versions.
 
 ---
 
@@ -73,15 +79,15 @@ comm_action = comm_network(obs)
 - Execution: Each agent acts independently
 - Better coordination without communication overhead
 
-### 3. **Parameter Sharing**
-All agents share same network:
-- Faster learning (more data per update)
-- Better generalization
-- Works for homogeneous agents
-```python
-# Single shared policy for all agents
-shared_policy = PPO('MlpPolicy', env, ...)
-```
+### 3. **Parameter Sharing vs Independent Policies**
+The baseline already shares one network between all agents (that is what the
+SuperSuit vec-env conversion does):
+- More data per update
+- Works well for homogeneous agents
+
+The comparison to make is with **independent policies** - one network per agent.
+SB3 has no built-in for this, so you need to write the loop that routes each
+agent's observations to its own model - a good exercise in itself.
 
 ### 4. **Curriculum Learning**
 Gradually increase difficulty:
@@ -175,12 +181,12 @@ Track these for multi-agent systems:
 
 **Minimum** (complete baseline):
 - Run baseline on Simple Spread
-- Document success rate
+- Document reward and coverage against random actions
 - Visualize agent behaviors
 
 **Standard** (improvements):
 - Try 2 different environments
-- Implement parameter sharing
+- Implement independent policies
 - Compare independent vs shared policies
 
 **Advanced** (extensions):
@@ -211,8 +217,8 @@ Track these for multi-agent systems:
 
 **Agents don't cooperate:**
 - Check reward structure (aligned incentives?)
-- Try parameter sharing
-- Increase training time
+- Increase training time first
+- Compare shared and independent policies
 - Use centralized critic
 
 **Training is unstable:**
