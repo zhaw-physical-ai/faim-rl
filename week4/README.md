@@ -20,7 +20,7 @@ By the end of this session, you will be able to:
 
 - **Task 0:** your 200 lines of REINFORCE vs three lines of PPO, on the same CartPole
 - **Task 1:** explore LunarLander, and watch a random agent crash
-- **Task 2:** train PPO, evaluate it, and watch it land
+- **Task 2:** train PPO, evaluate it, and watch it try to land
 - **Task 3:** compare PPO, A2C and DQN
 - **Task 4:** vary the learning rate
 - **Task 5 (optional):** train for 300k steps with an evaluation callback
@@ -53,7 +53,7 @@ other. A random agent scores around -200.
 
 | | Family | What it changes | Character |
 |---|---|---|---|
-| **PPO** | policy gradient | clips how far the policy may move in one update | reliable, strong default |
+| **PPO** | policy gradient | clips how far the policy may move in one update | a common default, generally dependable |
 | **A2C** | policy gradient | updates every few steps using a learned value baseline | fast per step, noisier |
 | **DQN** | value-based | Q-learning with a neural network, a replay buffer and a target network | sample-efficient, fussier to tune |
 
@@ -78,12 +78,16 @@ the physics simulation on the CPU.
 
 After 100k timesteps:
 
-| Algorithm | Mean reward | Verdict |
-|---|---|---|
-| Random | ~ -200 | crashes |
-| PPO | 180-240 | usually solves it |
-| A2C | 120-200 | more variable |
-| DQN | 150-220 | needs tuning |
+| Algorithm | Typical outcome |
+|---|---|
+| Random | around -200: crashes |
+| PPO | far above random, usually not solved yet |
+| A2C | similar; at this budget it can come out ahead of PPO |
+| DQN | the most variable of the three, sensitive to its settings |
+
+Expect none of them to be reliably at 200 after 100k steps - LunarLander usually
+needs several hundred thousand steps or more. Task 5 trains for 300k and gets
+noticeably closer.
 
 **Read these as a starting point for discussion, not a ranking.** Each algorithm was
 given one configuration and one seed, and 100k steps is short. A fair comparison would
